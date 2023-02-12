@@ -1,2 +1,2 @@
 # HTChat
-A simple chat program written in VBScript using mshta.exe.
+A simple chat program written in JavaScript using mshta.exe.
