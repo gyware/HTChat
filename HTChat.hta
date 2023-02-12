@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="x-ua-compatible" content="ie=9">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<HTA:APPLICATION
+ID = "CHAT"
+APPLICATIONNAME = "HTChat"
+BORDER = "dialog"
+BORDERSTYLE = "normal"
+CAPTION = "yes"
+CONTEXTMENU = "yes"
+ICON = "xpsrchvw.exe"
+INNERBORDER = "no"
+MAXIMIZEBUTTON = "yes"
+MINIMIZEBUTTON = "yes"
+NAVIGABLE = "yes"
+SCROLL = "auto"
+SCROLLFLAT = "no"
+SELECTION = "yes"
+SHOWINTASKBAR = "yes"
+SINGLEINSTANCE = "no"
+SYSMENU = "yes"
+VERSION = "1.0"
+WINDOWSTATE = "normal"
+/>
+<script type="text/javascript" language="javascript">    
+function refresh() {
+  div = document.getElementById("chatbox");
+  window.setInterval(function() {
+    fso = new ActiveXObject("Scripting.FileSystemObject");
+    fh = fso.OpenTextFile(ChatLog,1,1);
+    FileContents = fh.AtEndOfStream ? "" : fh.ReadAll();
+    fh.Close();
+    div.innerHTML = FileContents
+    if (autoscroll.checked) {div.scrollTop = div.scrollHeight};
+  }, 500);
+}
+
+function replaceAll(str, match, replacement){
+   return str.split(match).join(replacement);
+}
+
+function postMsg() {
+  TrimMsg = replaceAll(msg.value.trim(),'\n','<br>');
+  var EncodedMsg = TrimMsg.replace(/[\u00A0-\u9999<>\&]/g, function(i) {
+   return '&#'+i.charCodeAt(0)+';';
+});
+  if (EncodedMsg.length > 0) {
+    fh = fso.OpenTextFile(ChatLog,8);
+    UserName = user.value.trim();
+    if (UserName == '') {UserName = 'Anonymous'};
+    fh.write('<div style="border: 1px solid black; height: auto; padding: 4px;"><b>' + UserName + '</b><br>' + EncodedMsg + '</div><br>');
+    fh.Close();
+  }
+}
+
+function clearChat() {
+var adminpassinput = prompt('Enter Admin Password:','')
+if (adminpassinput != null) {
+hashCode = function(s) {
+  return s.split("").reduce(function(a, b) {
+    a = ((a << 5) - a) + b.charCodeAt(0);
+    return a & a;
+  }, 0);
+}
+var adminpassinput = hashCode(adminpassinput)
+if (adminpassinput == '1216985755') {
+fso = new ActiveXObject("Scripting.FileSystemObject");
+if (fso.FileExists(".\\chat.txt")) {
+fso.DeleteFile(".\\chat.txt");
+}
+}
+else {
+alert('Incorrect Admin Password');
+}
+}
+else {
+return;
+}
+}
+
+function darkMode() {
+document.body.className = 'dark-mode';
+document.getElementById('msg').className = 'dark-mode';
+document.getElementById('user').className = 'dark-mode';
+document.getElementById('darkmode-label').setAttribute('onclick','lightMode()');
+}
+
+function lightMode() {
+document.body.className = '';
+document.getElementById('msg').className = '';
+document.getElementById('user').className = '';
+document.getElementById('darkmode-label').setAttribute('onclick','darkMode()');
+}
+</script>
+<style>
+body {background-color: white; background-repeat: no-repeat;}
+#chatbox {height: 70vh; width: 100%; border: none; overflow: auto;}
+textarea#msg {width: 100%;}
+#sb {float: right;}
+.dark-mode {background-color: #303030 !important; color: white !important;}
+</style>
+</head>
+<body onload="refresh()">
+  <script>
+    document.title = "HTChat - gyware.gyro.eu.org"
+    ChatLog = ".\\chat.txt";
+    x = 520;
+    y = 680;
+    window.resizeTo(x, y);
+    window.moveTo((screen.availWidth - x)/2, (screen.availHeight - y)/2);
+    </script>
+  <div id="chatbox" title="Chat Box"></div><br><br>
+  <button style="margin-bottom: 4px;" onclick="clearChat()">Clear</button>
+  <textarea id="msg" rows="4"></textarea><br><br>
+  <label for="user">
+  Username:
+  <input type="text" id="user">
+  </label>
+  <label for="autoscroll">
+  Autoscroll:
+  <input type="checkbox" checked="checked" id="autoscroll">
+  </label>
+  <label for="darkmode" onclick="darkMode()" id="darkmode-label">
+  Dark Mode:
+  <input type="checkbox" id="darkmode">
+  </label>
+  <input type="button" id="sb" value="Send" onclick="postMsg()">
+</body>
