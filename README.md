@@ -1,4 +1,4 @@
 # HTChat
-A simple chat program written with Microsoft HTML Application and JavaScript.
+A simple chat program written HTML and JavaScript using Microsoft HTML Application host.
 
 *Easy to use, easy to understand.*
