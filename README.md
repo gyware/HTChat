@@ -5,7 +5,7 @@
 ![AppVeyor](https://img.shields.io/badge/Development-In_Progress-lightgreen)
 ![AppVeyor](https://img.shields.io/badge/Languages-HTML,_JavaScript-red)
 
-A simple chat program written HTML and JavaScript using Microsoft HTML Application host.
+A simple chat program written in HTML and JavaScript using Microsoft HTML Application host.
 
 ## Setup
 Just download, extract and run HTChat.hta.
